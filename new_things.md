@@ -6,3 +6,5 @@
 
 **>** → redirects output to a file
 **requirements.txt** → standard dependency file
+
+### chmod +x entrypoint.sh
