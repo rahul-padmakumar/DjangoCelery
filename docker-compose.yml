@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   redis:
     image: redis:7.0.11-alpine
@@ -9,17 +8,30 @@ services:
       dockerfile: Dockerfile
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
-      - ./dcelery:/app
+      - ./dcelery:/usr/src/app
     ports:
       - "8000:8000"
     depends_on:
       - redis
-  celery:
-    container_name: celery
+
+  celery1:
+    container_name: celery1
     build:
       context: ./dcelery
       dockerfile: Dockerfile
+    command: celery --app=dcelery worker -Q queue1 -n worker1 -l INFO
     volumes:
-      - ./dcelery:/app
+      - ./dcelery:/usr/src/app
+    depends_on:
+      - redis
+
+  celery2:
+    container_name: celery2
+    build:
+      context: ./dcelery
+      dockerfile: Dockerfile
+    command: celery --app=dcelery worker -Q queue2 -n worker2 -l INFO
+    volumes:
+      - ./dcelery:/usr/src/app
     depends_on:
       - redis
